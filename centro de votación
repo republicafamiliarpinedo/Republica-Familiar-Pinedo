@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Votación Familiar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+        .party {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .party img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+        .results {
+            margin-top: 20px;
+            display: none;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+    <script>
+        const padronElectoral = {
+            "codigo123": "Ciudad Familiar A",
+            "codigo456": "Ciudad Familiar B",
+            "codigo789": "Ciudad Familiar C"
+        };
+
+        const votos = {
+            "Juntos En Familia (JEF)": 0,
+            "En Familia Contra el Más (EFCM)": 0,
+            "Nulo": 0
+        };
+
+        function verificarCodigo() {
+            const codigo = document.getElementById('codigo').value;
+            const ciudad = padronElectoral[codigo];
+
+            if (ciudad) {
+                document.getElementById('ciudadFamiliar').textContent = ciudad;
+                document.getElementById('formularioVotacion').style.display = 'block';
+            } else {
+                alert('Código inválido');
+            }
+        }
+
+        function enviarVoto() {
+            const seleccion = document.querySelector('input[name="partido"]:checked');
+
+            if (seleccion) {
+                votos[seleccion.value]++;
+                alert('Voto registrado con éxito.');
+            } else {
+                alert('Por favor, seleccione un partido.');
+            }
+        }
+
+        function generarResultados() {
+            document.getElementById('formularioVotacion').style.display = 'none';
+
+            const tablaResultados = document.getElementById('tablaResultados');
+            tablaResultados.innerHTML = `
+                <tr>
+                    <th>Fuerza política</th>
+                    <th>Votos totales</th>
+                    <th>Senadores ganados</th>
+                </tr>
+                <tr>
+                    <td>Juntos En Familia (JEF)</td>
+                    <td>${votos["Juntos En Familia (JEF)"]}</td>
+                    <td>${Math.floor(votos["Juntos En Familia (JEF)"] / 10)}</td>
+                </tr>
+                <tr>
+                    <td>En Familia Contra el Más (EFCM)</td>
+                    <td>${votos["En Familia Contra el Más (EFCM)"]}</td>
+                    <td>${Math.floor(votos["En Familia Contra el Más (EFCM)"] / 10)}</td>
+                </tr>
+                <tr>
+                    <td>Nulo</td>
+                    <td>${votos["Nulo"]}</td>
+                    <td>—</td>
+                </tr>
+            `;
+
+            document.getElementById('resultados').style.display = 'block';
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Votación Familiar</h1>
+        <label for="codigo">Ingrese su código personal:</label>
+        <input type="password" id="codigo">
+        <button onclick="verificarCodigo()">Verificar</button>
+
+        <h2 id="ciudadFamiliar"></h2>
+
+        <div id="formularioVotacion" style="display:none;">
+            <h3>Seleccione su voto:</h3>
+
+            <div class="party">
+                <input type="radio" id="jef" name="partido" value="Juntos En Familia (JEF)">
+                <label for="jef">
+                    <img src="jef_logo.png" alt="Logo JEF">
+                    Juntos En Familia (JEF)
+                </label>
+            </div>
+
+            <div class="party">
+                <input type="radio" id="efcm" name="partido" value="En Familia Contra el Más (EFCM)">
+                <label for="efcm">
+                    <img src="efcm_logo.png" alt="Logo EFCM">
+                    En Familia Contra el Más (EFCM)
+                </label>
+            </div>
+
+            <div class="party">
+                <input type="radio" id="nulo" name="partido" value="Nulo">
+                <label for="nulo">
+                    Nulo
+                </label>
+            </div>
+
+            <button onclick="enviarVoto()">Enviar Voto</button>
+        </div>
+
+        <div class="results" id="resultados">
+            <h3>Resultados:</h3>
+            <table id="tablaResultados"></table>
+        </div>
+
+        <button onclick="generarResultados()">Generar Resultados</button>
+    </div>
+</body>
+</html>
